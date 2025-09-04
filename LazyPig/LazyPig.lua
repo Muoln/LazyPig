@@ -2243,6 +2243,37 @@ function LazyPig_IsShieldEquipped()
 	return false
 end
 
+function LazyPig_HasRighteousFury()
+    for i = 1, 32 do
+        local buffTexture = UnitBuff("player", i)
+        if buffTexture == "Interface\\Icons\\Spell_Holy_SealOfFury" then
+            return true
+        end
+    end
+    return false
+end
+
+function LazyPig_HasRockbiterWeapon()
+    if not HasRockbiterWeapon.tooltip then
+        HasRockbiterWeapon.tooltip = CreateFrame("GameTooltip", "HasRockbiterWeaponTooltip", UIParent, "GameTooltipTemplate")
+    end
+
+    local tooltip = HasRockbiterWeapon.tooltip
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    tooltip:SetInventoryItem("player", 16)  -- Main-hand weapon slot
+
+    for i = 1, 20 do
+        local textLine = _G["HasRockbiterWeaponTooltipTextLeft" .. i]
+        if textLine then
+            local text = textLine:GetText()
+            if text and string.find(text, "Rockbiter") then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 function LazyPig_CancelSalvationBuff()
 	local buff = {"Spell_Holy_SealOfSalvation", "Spell_Holy_GreaterBlessingofSalvation"}
 	local counter = 0
@@ -2266,9 +2297,25 @@ function LazyPig_CancelSalvationBuff()
 end
 
 function LazyPig_CheckSalvation()
-	if(LPCONFIG.SALVA == 1 or LPCONFIG.SALVA == 2 and (LazyPig_IsShieldEquipped() and LazyPig_PlayerClass("Warrior", "player") or LazyPig_IsBearForm())) then
-		LazyPig_CancelSalvationBuff()
-	end
+    if LPCONFIG.SALVA == 1 then
+        LazyPig_CancelSalvationBuff()
+    elseif LPCONFIG.SALVA == 2 then
+        local shouldCancel = false
+
+        if LazyPig_PlayerClass("Warrior", "player") and LazyPig_IsShieldEquipped() then
+            shouldCancel = true
+        elseif LazyPig_IsBearForm() then
+            shouldCancel = true
+        elseif LazyPig_HasRighteousFury() then
+            shouldCancel = true
+        elseif LazyPig_HasRockbiterWeapon() then
+            shouldCancel = true
+        end
+
+        if shouldCancel then
+            LazyPig_CancelSalvationBuff()
+        end
+    end
 end
 
 function LazyPig_ShowBindings(bind, fs, desc)
