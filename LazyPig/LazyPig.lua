@@ -209,6 +209,27 @@ function LazyPig_Command()
 	end	
 end
 
+function LazyPig_HasRockbiterWeapon()
+    if not LazyPig_HasRockbiterWeapon.tooltip then
+        LazyPig_HasRockbiterWeapon.tooltip = CreateFrame("GameTooltip", "LazyPig_HasRockbiterTooltip", UIParent, "GameTooltipTemplate")
+    end
+
+    local tooltip = LazyPig_HasRockbiterWeapon.tooltip
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    tooltip:SetInventoryItem("player", 16)  -- Main-hand weapon slot
+
+    for i = 1, 20 do
+        local textLine = _G["LazyPig_HasRockbiterTooltipTextLeft" .. i]
+        if textLine then
+            local text = textLine:GetText()
+            if text and string.find(text, "Rockbiter") then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 function LazyPig_OnUpdate()
 	local current_time = GetTime();
 	local shiftstatus = IsShiftKeyDown();
@@ -2248,27 +2269,6 @@ function LazyPig_HasRighteousFury()
         local buffTexture = UnitBuff("player", i)
         if buffTexture == "Interface\\Icons\\Spell_Holy_SealOfFury" then
             return true
-        end
-    end
-    return false
-end
-
-function LazyPig_HasRockbiterWeapon()
-    if not LazyPig_HasRockbiterWeapon.tooltip then
-        LazyPig_HasRockbiterWeapon.tooltip = CreateFrame("GameTooltip", "LazyPig_HasRockbiterTooltip", UIParent, "GameTooltipTemplate")
-    end
-
-    local tooltip = LazyPig_HasRockbiterWeapon.tooltip
-    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    tooltip:SetInventoryItem("player", 16)  -- Main-hand weapon slot
-
-    for i = 1, 20 do
-        local textLine = _G["LazyPig_HasRockbiterTooltipTextLeft" .. i]
-        if textLine then
-            local text = textLine:GetText()
-            if text and string.find(text, "Rockbiter") then
-                return true
-            end
         end
     end
     return false
