@@ -2254,16 +2254,16 @@ function LazyPig_HasRighteousFury()
 end
 
 function LazyPig_HasRockbiterWeapon()
-    if not HasRockbiterWeapon.tooltip then
-        HasRockbiterWeapon.tooltip = CreateFrame("GameTooltip", "HasRockbiterWeaponTooltip", UIParent, "GameTooltipTemplate")
+    if not LazyPig_HasRockbiterWeapon.tooltip then
+        LazyPig_HasRockbiterWeapon.tooltip = CreateFrame("GameTooltip", "LazyPig_HasRockbiterTooltip", UIParent, "GameTooltipTemplate")
     end
 
-    local tooltip = HasRockbiterWeapon.tooltip
+    local tooltip = LazyPig_HasRockbiterWeapon.tooltip
     tooltip:SetOwner(UIParent, "ANCHOR_NONE")
     tooltip:SetInventoryItem("player", 16)  -- Main-hand weapon slot
 
     for i = 1, 20 do
-        local textLine = _G["HasRockbiterWeaponTooltipTextLeft" .. i]
+        local textLine = _G["LazyPig_HasRockbiterTooltipTextLeft" .. i]
         if textLine then
             local text = textLine:GetText()
             if text and string.find(text, "Rockbiter") then
